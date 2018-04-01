@@ -12,16 +12,16 @@ public class SenderExample {
         try {
             sender = new Sender("192.168.1.227", 50051);
 
-            sender.sendVerifierUpdate(true, "Everything is fine");
-            sender.sendVerifierUpdate(false, "Sensor doesn't works");
-            sender.sendVerifierUpdate(true, "Everything is fine");
-            sender.sendVerifierUpdate(true, "Everything is fine");
+            sender.sendVerifierUpdate("verifier@test", "sensorid@test", true, "Everything is fine");
+            sender.sendVerifierUpdate("verifier@test", "sensorid@test", false, "Sensor doesn't works");
+            sender.sendVerifierUpdate("verifier@test", "sensorid@test", true, "Everything is fine");
+            sender.sendVerifierUpdate("verifier@test", "sensorid@test", true, "Everything is fine");
 
-            sender.sendSensorUpdate("Temperature", 30);
-            sender.sendSensorUpdate("Temperature", 60);
-            sender.sendSensorUpdate("Smoke", "no");
-            sender.sendSensorUpdate("Smoke", "no");
-            sender.sendSensorUpdate("Smoke", "yes");
+            sender.sendSensorUpdate("sensorid@test", "Temperature", 30);
+            sender.sendSensorUpdate("sensorid@test", "Temperature", 60);
+            sender.sendSensorUpdate("sensorid@test", "Smoke", 120);
+            sender.sendSensorUpdate("sensorid@test", "Smoke", 10);
+            sender.sendSensorUpdate("sensorid@test", "Smoke", 0);
 
         } finally {
             try {

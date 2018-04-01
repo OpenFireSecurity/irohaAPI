@@ -37,15 +37,15 @@ public class Sender {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public void sendVerifierUpdate(Boolean sensorIsWorking, String status) {
+    public void sendVerifierUpdate(String verifierId, String sensorId, Boolean sensorIsWorking, String status) {
         logger.info("Will try to send verifier update...");
         Commands.Command command =
                 Commands.Command.newBuilder().setTransferAsset(
                         Commands.TransferAsset.newBuilder()
-                                .setSrcAccountId("verifier@test")
-                                .setDestAccountId("sensorid@test")
-                                .setAssetId("checks")
-                                .setDescription((sensorIsWorking ? "1" :"0") + status)
+                                .setSrcAccountId(verifierId)
+                                .setDestAccountId(sensorId)
+                                .setAssetId("checks#test")
+                                .setDescription((sensorIsWorking ? "1" : "0") + status)
                                 .setAmount(Primitive.Amount.newBuilder()
                                         .setValue(Primitive.uint256.newBuilder().setFirst(1).build())
                                         .setPrecision(0)
@@ -56,7 +56,7 @@ public class Sender {
         BlockOuterClass.Transaction.Payload payload =
                 BlockOuterClass.Transaction.Payload.newBuilder()
                         .setCreatedTime(System.currentTimeMillis())
-                        .setCreatorAccountId("verifier@test")
+                        .setCreatorAccountId(verifierId)
                         .setTxCounter(1)
                         .addCommands(command)
                         .build();
@@ -69,7 +69,7 @@ public class Sender {
         }
     }
 
-    public void sendSensorUpdate(String parameter, Object value) {
+    public void sendSensorUpdate(String sensorId, String parameter, Object value) {
         logger.info("Will try to send sensor update...");
 
         long timestamp = System.currentTimeMillis();
@@ -77,7 +77,7 @@ public class Sender {
         Commands.Command command =
                 Commands.Command.newBuilder().setSetAccountDetail(
                         Commands.SetAccountDetail.newBuilder()
-                                .setAccountId("sensorid@test")
+                                .setAccountId(sensorId)
                                 .setKey(parameter)
                                 .setValue(value.toString()))
                         .build();
@@ -85,7 +85,7 @@ public class Sender {
         BlockOuterClass.Transaction.Payload payload =
                 BlockOuterClass.Transaction.Payload.newBuilder()
                         .setCreatedTime(timestamp)
-                        .setCreatorAccountId("sensorid@test")
+                        .setCreatorAccountId(sensorId)
                         .setTxCounter(1)
                         .addCommands(command)
                         .build();

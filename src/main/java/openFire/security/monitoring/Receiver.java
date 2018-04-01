@@ -1,12 +1,14 @@
 package openFire.security.monitoring;
 
-import com.google.protobuf.Message;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import iroha.protocol.BlockOuterClass;
 import iroha.protocol.Queries;
 import iroha.protocol.QueryServiceGrpc;
-import iroha.protocol.Responses;
+import openFire.security.monitoring.sensorResponseModel.SensorStatusMap;
+import openFire.security.monitoring.parser.SensorStatusParser;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -37,7 +39,7 @@ public class Receiver {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public Responses.QueryResponse getUniqueSensorUpdates() {
+    public SensorStatusMap getUniqueSensorUpdates(String sensorId) {
         logger.info("Will try to get verifier updates");
 
         Queries.Query query = Queries.Query.newBuilder().setPayload(
@@ -46,14 +48,21 @@ public class Receiver {
                         .setQueryCounter(1l)
                         .setCreatorAccountId("observer@test")
                         .setGetAccountDetail(Queries.GetAccountDetail.newBuilder()
-                                .setAccountId("sensorid@test")
+                                .setAccountId(sensorId)
                                 .build()))
                 .build();
         iroha.protocol.Responses.QueryResponse queryResponse = blockingStub.find(query);
-        return queryResponse;
+
+        try {
+            return SensorStatusParser.parse(queryResponse.getAccountDetailResponse().getDetail());
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public Responses.QueryResponse getAllSensorUpdates() {
+    public List<BlockOuterClass.Transaction> getAllSensorUpdates() {
         logger.info("Will try to get verifier updates");
         Queries.Query query = Queries.Query.newBuilder().setPayload(
                 Queries.Query.Payload.newBuilder()
@@ -66,27 +75,18 @@ public class Receiver {
                 .build();
 
         iroha.protocol.Responses.QueryResponse queryResponse = blockingStub.find(query);
-        return queryResponse;
+
+        try {
+            return queryResponse.getTransactionsResponse().getTransactionsList();
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
-    public Responses.QueryResponse getAllVerifiersUpdates() {
-        logger.info("Will try to get verifier updates");
-
-        Queries.Query query = Queries.Query.newBuilder().setPayload(
-                Queries.Query.Payload.newBuilder()
-                        .setCreatedTime(System.currentTimeMillis())
-                        .setQueryCounter(1l)
-                        .setCreatorAccountId("observer@test")
-                        .setGetAssetInfo(Queries.GetAssetInfo.newBuilder()
-                                .setAssetId("checks#test")
-                                .build()))
-                .build();
-        iroha.protocol.Responses.QueryResponse queryResponse = blockingStub.find(query);
-        return queryResponse;
-    }
-
-    public Responses.QueryResponse getAllVerifierUpdates(String verifierId) {
+    public List<BlockOuterClass.Transaction> getAllVerifierUpdates(String verifierId) {
         logger.info("Will try to get verifier updates");
         Queries.Query query = Queries.Query.newBuilder().setPayload(
                 Queries.Query.Payload.newBuilder()
@@ -99,6 +99,13 @@ public class Receiver {
                 .build();
 
         iroha.protocol.Responses.QueryResponse queryResponse = blockingStub.find(query);
-        return queryResponse;
+
+        try {
+            return queryResponse.getTransactionsResponse().getTransactionsList();
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 }
