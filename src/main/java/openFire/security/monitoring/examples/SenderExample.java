@@ -1,11 +1,8 @@
 package openFire.security.monitoring.examples;
 
-import openFire.security.monitoring.ExampleSender;
 import openFire.security.monitoring.Sender;
 
 import java.util.logging.Logger;
-
-import static org.junit.Assert.*;
 
 public class SenderExample {
     private static final Logger logger = Logger.getLogger(SenderExample.class.getName());

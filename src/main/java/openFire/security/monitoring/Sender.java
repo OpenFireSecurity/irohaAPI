@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Sender {
-    private static final Logger logger = Logger.getLogger(ExampleSender.class.getName());
+    private static final Logger logger = Logger.getLogger(Sender.class.getName());
 
     private final ManagedChannel channel;
     private final CommandServiceGrpc.CommandServiceBlockingStub blockingStub;

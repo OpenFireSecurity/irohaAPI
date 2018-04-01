@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class Receiver {
-    private static final Logger logger = Logger.getLogger(ExampleGetter.class.getName());
+    private static final Logger logger = Logger.getLogger(Receiver.class.getName());
 
     private final ManagedChannel channel;
     private final QueryServiceGrpc.QueryServiceBlockingStub blockingStub;

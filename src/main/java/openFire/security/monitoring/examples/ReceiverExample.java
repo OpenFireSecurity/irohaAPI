@@ -18,12 +18,12 @@ public class ReceiverExample {
             Responses.QueryResponse allVerifiersUpdates = receiver.getAllVerifiersUpdates();
 
             Responses.QueryResponse uniqueSensorUpdates = receiver.getUniqueSensorUpdates();
-            Responses.QueryResponse allSensorrUpdates = receiver.getAllSensorUpdates();
+            Responses.QueryResponse allSensorUpdates = receiver.getAllSensorUpdates();
 
             logger.info("allVerifierUpdates: " + allVerifierUpdates.toString());
             logger.info("allVerifiersUpdates: " + allVerifiersUpdates.toString());
             logger.info("uniqueSensorUpdates: " + uniqueSensorUpdates.toString());
-            logger.info("allSensorrUpdates: " + allSensorrUpdates.toString());
+            logger.info("allSensorUpdates: " + allSensorUpdates.toString());
 
         } finally {
             try {
