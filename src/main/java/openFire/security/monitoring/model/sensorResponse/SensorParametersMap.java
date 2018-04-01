@@ -1,4 +1,6 @@
-package openFire.security.monitoring.sensorResponseModel;
+package openFire.security.monitoring.model.sensorResponse;
+
+import openFire.security.monitoring.model.SensorParameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ public class SensorParametersMap {
 
     @Override
     public String toString() {
-        return "SensorParametersMap" + infoFromSensor;
+        return infoFromSensor.toString();
     }
 
     public Map<SensorParameter, String> getInfoFromSensor() {

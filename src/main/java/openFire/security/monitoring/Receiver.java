@@ -5,9 +5,12 @@ import io.grpc.ManagedChannelBuilder;
 import iroha.protocol.BlockOuterClass;
 import iroha.protocol.Queries;
 import iroha.protocol.QueryServiceGrpc;
-import openFire.security.monitoring.sensorResponseModel.SensorStatusMap;
+import openFire.security.monitoring.model.SensorTransaction;
+import openFire.security.monitoring.model.VerifierTransaction;
+import openFire.security.monitoring.model.sensorResponse.SensorStatusMap;
 import openFire.security.monitoring.parser.SensorStatusParser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -62,7 +65,7 @@ public class Receiver {
         return null;
     }
 
-    public List<BlockOuterClass.Transaction> getAllSensorUpdates() {
+    public List<SensorTransaction> getAllSensorUpdates() {
         logger.info("Will try to get verifier updates");
         Queries.Query query = Queries.Query.newBuilder().setPayload(
                 Queries.Query.Payload.newBuilder()
@@ -76,17 +79,28 @@ public class Receiver {
 
         iroha.protocol.Responses.QueryResponse queryResponse = blockingStub.find(query);
 
+        List<SensorTransaction> sensorTransactions = new ArrayList<>();
         try {
-            return queryResponse.getTransactionsResponse().getTransactionsList();
+            for (BlockOuterClass.Transaction transaction : queryResponse.getTransactionsResponse().getTransactionsList()) {
+                SensorTransaction sensorTransaction = null;
+                try {
+                    sensorTransaction = new SensorTransaction(transaction);
+                } catch (Exception e) {
+                    logger.warning("Transaction can't be parsed");
+                }
+                if (sensorTransaction != null) {
+                    sensorTransactions.add(sensorTransaction);
+                }
+            }
         } catch (Exception e) {
             logger.warning(e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return sensorTransactions;
     }
 
 
-    public List<BlockOuterClass.Transaction> getAllVerifierUpdates(String verifierId) {
+    public List<VerifierTransaction> getAllVerifierUpdates(String verifierId) {
         logger.info("Will try to get verifier updates");
         Queries.Query query = Queries.Query.newBuilder().setPayload(
                 Queries.Query.Payload.newBuilder()
@@ -100,12 +114,24 @@ public class Receiver {
 
         iroha.protocol.Responses.QueryResponse queryResponse = blockingStub.find(query);
 
+        List<VerifierTransaction> verifierTransactions = new ArrayList<>();
         try {
-            return queryResponse.getTransactionsResponse().getTransactionsList();
+            for (BlockOuterClass.Transaction transaction : queryResponse.getTransactionsResponse().getTransactionsList()) {
+                VerifierTransaction verifierTransaction = null;
+                try {
+                    verifierTransaction = new VerifierTransaction(transaction);
+                } catch (Exception e) {
+                    logger.warning("Transaction can't be parsed");
+                }
+                if (verifierTransaction != null) {
+                    verifierTransactions.add(verifierTransaction);
+                }
+            }
         } catch (Exception e) {
             logger.warning(e.getMessage());
             e.printStackTrace();
         }
-        return null;
+
+        return verifierTransactions;
     }
 }

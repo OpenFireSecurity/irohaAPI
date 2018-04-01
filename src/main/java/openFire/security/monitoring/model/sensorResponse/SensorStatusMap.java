@@ -1,4 +1,4 @@
-package openFire.security.monitoring.sensorResponseModel;
+package openFire.security.monitoring.model.sensorResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class SensorStatusMap {
 
     @Override
     public String toString() {
-        return "SensorStatusMap" + statusMap;
+        return statusMap.toString();
     }
 
     public Set<String> getSensorIds() {

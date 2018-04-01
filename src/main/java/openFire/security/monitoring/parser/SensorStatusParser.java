@@ -1,7 +1,7 @@
 package openFire.security.monitoring.parser;
 
 import com.alibaba.fastjson.JSON;
-import openFire.security.monitoring.sensorResponseModel.SensorStatusMap;
+import openFire.security.monitoring.model.sensorResponse.SensorStatusMap;
 
 import java.util.Map;
 

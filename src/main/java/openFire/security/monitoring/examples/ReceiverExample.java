@@ -1,7 +1,9 @@
 package openFire.security.monitoring.examples;
 
 import openFire.security.monitoring.Receiver;
-import openFire.security.monitoring.sensorResponseModel.SensorStatusMap;
+import openFire.security.monitoring.model.VerifierTransaction;
+import openFire.security.monitoring.model.sensorResponse.SensorStatusMap;
+import openFire.security.monitoring.model.SensorTransaction;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,12 +16,10 @@ public class ReceiverExample {
         try {
             receiver = new Receiver("192.168.1.227", 50051);
 
-            List<iroha.protocol.BlockOuterClass.Transaction> allVerifierUpdates = receiver.getAllVerifierUpdates("verifier@test");
+            List<VerifierTransaction> allVerifierUpdates = receiver.getAllVerifierUpdates("verifier@test");
 
             SensorStatusMap uniqueSensorUpdates = receiver.getUniqueSensorUpdates("sensorid@test");
-            List<iroha.protocol.BlockOuterClass.Transaction> allSensorUpdates = receiver.getAllSensorUpdates();
-
-
+            List<SensorTransaction> allSensorUpdates = receiver.getAllSensorUpdates();
 
             logger.info("allVerifierUpdates: " + allVerifierUpdates.toString());
             logger.info("uniqueSensorUpdates: " + uniqueSensorUpdates.toString());
