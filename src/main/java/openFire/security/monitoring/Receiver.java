@@ -11,9 +11,11 @@ import openFire.security.monitoring.model.sensorResponse.SensorStatusMap;
 import openFire.security.monitoring.parser.SensorStatusParser;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Receiver {
     private static final Logger logger = Logger.getLogger(Receiver.class.getName());
@@ -96,7 +98,7 @@ public class Receiver {
             logger.warning(e.getMessage());
             e.printStackTrace();
         }
-        return sensorTransactions;
+        return sensorTransactions.stream().sorted(Comparator.comparing(SensorTransaction::getLocalDateTime).reversed()).collect(Collectors.toList());
     }
 
 
@@ -132,6 +134,6 @@ public class Receiver {
             e.printStackTrace();
         }
 
-        return verifierTransactions;
+        return verifierTransactions.stream().sorted(Comparator.comparing(VerifierTransaction::getLocalDateTime).reversed()).collect(Collectors.toList());
     }
 }
